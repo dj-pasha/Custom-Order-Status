@@ -5,6 +5,10 @@ if ( ! defined ('ABSPATH') ) {
 }
 
 function woocos_bulk_change_orders_ajaxPost(){
+    if ( ! isset( $_POST['woocos_nonce'] ) || ! check_ajax_referer( 'woocos_action', 'woocos_nonce', false ) ) {
+        wp_send_json_error( array( 'message' => 'Invalid nonce.' ) );
+        return;
+    }
     if(!isset($_POST)){
         return;
     } 

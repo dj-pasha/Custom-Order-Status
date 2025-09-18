@@ -114,7 +114,7 @@ class WOOCOS_Email_Manager {
 		}
 
 		// Replace preview type with the real email ID (just the slug, no prefix)
-		$_GET['type'] = $first->slug;
+	$_GET['type'] = sanitize_text_field($first->slug);
 	}
     
 }

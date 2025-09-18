@@ -31,6 +31,7 @@ function woocos_settings_page()
        <div>
            <h3><?php esc_html_e('Create New Status', 'custom-order-statuses-for-woocommerce'); ?></h3>
            <form method="POST">
+               <?php wp_nonce_field('woocos_action', 'woocos_nonce'); ?>
                <p>
                    <p><strong><?php esc_html_e('Order Status Title', 'custom-order-statuses-for-woocommerce'); ?></strong></p>
                    <p><input type="text" name='new_woocos_title' required id='new-woocos-title'></p>
@@ -62,24 +63,27 @@ function woocos_settings_page()
    </div>
    <?php
 
-   if(isset($_POST)) {
-       if(isset($_POST['new_woocos_title']) && isset($_POST['new_woocos_slug'])) {
-        
-          $title = sanitize_text_field($_POST['new_woocos_title']);
-          $slug = woocos_slugify($_POST['new_woocos_slug']);
-          if (isset($_POST['new_woocos_bulk'])) {
-            $bulk = 1;
-          } else {
-            $bulk = 0;
-          }
-          if(strlen($slug) > 17) {
-              $slug = str_split($slug, 17)[0];
-          }
-          $slug = sanitize_text_field($slug);
+     if(isset($_POST)) {
+             if (
+                     isset($_POST['woocos_nonce']) &&
+                     wp_verify_nonce($_POST['woocos_nonce'], 'woocos_action') &&
+                     isset($_POST['new_woocos_title']) && isset($_POST['new_woocos_slug'])
+             ) {
+                    $title = sanitize_text_field($_POST['new_woocos_title']);
+                    $slug = woocos_slugify($_POST['new_woocos_slug']);
+                    if (isset($_POST['new_woocos_bulk'])) {
+                        $bulk = 1;
+                    } else {
+                        $bulk = 0;
+                    }
+                    if(strlen($slug) > 17) {
+                            $slug = str_split($slug, 17)[0];
+                    }
+                    $slug = sanitize_text_field($slug);
 
-          woocos_add_new_custom_order_status($title, $slug, $bulk);
-       }
-   }
+                    woocos_add_new_custom_order_status($title, $slug, $bulk);
+             }
+     }
 }
 
 

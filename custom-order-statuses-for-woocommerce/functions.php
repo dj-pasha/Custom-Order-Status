@@ -59,8 +59,8 @@ function woocos_slugify($text, string $divider = '-')
 function woocos_create_email_template($slug)
 {
     $default_email_template_contents = file_get_contents( dirname(__FILE__) . '/templates/emails/default/woocos-email-template.php' );
-    
-    $new_email_template = dirname(__FILE__) . '/templates/emails/' . $slug . '.php';
+    $safe_slug = sanitize_file_name($slug);
+    $new_email_template = dirname(__FILE__) . '/templates/emails/' . $safe_slug . '.php';
     if (file_exists($new_email_template)) {
         return;
     } else {
@@ -72,7 +72,8 @@ function woocos_create_email_template($slug)
 
 function woocos_remove_email_template($slug)
 {
-    $email_template = dirname(__FILE__) . '/templates/emails/' . $slug . '.php';
+    $safe_slug = sanitize_file_name($slug);
+    $email_template = dirname(__FILE__) . '/templates/emails/' . $safe_slug . '.php';
     if(file_exists($email_template)) {
         unlink($email_template);
     }
